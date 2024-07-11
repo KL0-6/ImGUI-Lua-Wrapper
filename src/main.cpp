@@ -5,6 +5,8 @@
 #include <Imgui/imgui_impl_opengl3.h>
 #include <GLFW/glfw3.h> 
 
+#include "core/api/api.h"
+
 int main()
 {
     if (!glfwInit())
@@ -12,6 +14,12 @@ int main()
         std::printf("[FATAL ERROR]: Failed to initialize GLFW!");
 
         return 0;
+    }
+
+    lua_State* L = api::initialize();
+    if(L == nullptr)
+    {
+        std::printf("[FATAL ERROR]: Failed to initialize lua_State!");
     }
 
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -46,6 +54,21 @@ int main()
         return 0;
     }
 
+    /*
+    window::button* button = new window::button;
+    button->text = "Click me!";
+    button->callback = []()
+    {
+        std::printf("Button Clicked!\n");
+    };
+
+    window::window* win = new window::window;
+    win->title = "Hello!";
+    win->children.push_back(button);
+
+    window::windows.push_back(win);
+    */
+   
     glfwMakeContextCurrent(window);
     glfwSwapInterval(1);
 
@@ -66,17 +89,20 @@ int main()
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
-        ImGui::Begin("Test");
+        int w, h;
+        glfwGetFramebufferSize(window, &w, &h);
+
+        ImGui::SetNextWindowSize(ImVec2(w, h)); 
+        ImGui::SetNextWindowPos(ImVec2(0, 0));
+
+        for(auto win : window::windows)
         {
-
-            ImGui::End();
+            win->render();
         }
-
 
         ImGui::Render();
         
-        int w, h;
-        glfwGetFramebufferSize(window, &w, &h);
+
         glViewport(0, 0, w, h);
         glClear(GL_COLOR_BUFFER_BIT);
 

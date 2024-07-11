@@ -2138,6 +2138,9 @@ std::optional<AstExprBinary::Op> Parser::checkBinaryConfusables(const BinaryOpPr
         report(Location(start, next.location), "Unexpected '||'; did you mean 'or'?");
         return AstExprBinary::Or;
     }
+    /*
+    NOTE: We support the != operator
+
     else if (curr.type == '!' && next.type == '=' && curr.location.end == next.location.begin &&
              binaryPriority[AstExprBinary::CompareNe].left > limit)
     {
@@ -2145,7 +2148,7 @@ std::optional<AstExprBinary::Op> Parser::checkBinaryConfusables(const BinaryOpPr
         report(Location(start, next.location), "Unexpected '!='; did you mean '~='?");
         return AstExprBinary::CompareNe;
     }
-
+    */
     return std::nullopt;
 }
 

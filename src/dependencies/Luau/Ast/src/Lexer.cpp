@@ -855,6 +855,8 @@ Lexeme Lexer::readNext()
             return Lexeme(Location(start, 1), '>');
     }
 
+    // Custom support for the != operator
+    case '!':
     case '~':
     {
         consume();
