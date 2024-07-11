@@ -3,11 +3,15 @@
 
 int window_new(lua_State* L)
 {
-    const char* window_title = luaL_checklstring(L, 1, NULL);
+    luaL_checktype(L, 1, LUA_TSTRING);
 
-    window::window* win = reinterpret_cast<window::window*>(lua_newuserdata(L, sizeof(window::window)));
+    const char* window_title = lua_tostring(L, 1);
+
+    window::window* win = metatable::allocate_userdata<window::window>(L, "window_metatable");
+	new(win)window::window;
 
     win->title = window_title;
+    win->lua_ref = lua_ref(L, -1);
 
     window::windows.push_back(win);
 
@@ -16,14 +20,17 @@ int window_new(lua_State* L)
 
 int add_label(lua_State* L)
 {
+    luaL_checktype(L, 1, LUA_TUSERDATA);
+    luaL_checktype(L, 2, LUA_TSTRING);
+
     window::window* win = reinterpret_cast<window::window*>(lua_touserdata(L, 1));
+    const char* text = lua_tostring(L, 2);
 
-    const char* text = luaL_checklstring(L, 2, NULL);
-
-    window::label* label = reinterpret_cast<window::label*>(lua_newuserdata(L, sizeof(window::label)));
+    window::label* label = metatable::create_userdata<window::label>(L);
 	new(label)window::label;
 
     label->text = text;
+    label->lua_ref = lua_ref(L, -1);
 
     win->children.push_back(label);
 
@@ -42,17 +49,17 @@ lua_State* api::initialize()
     }
 
     luaL_openlibs(L); // Registers the default Luau libraries!
+    metatable::initialize(L); // Register our metatables
 
-    lua_pushcfunction(L, window_new, "window_new");
-    lua_setglobal(L, "window_new");
-
-    lua_pushcfunction(L, add_label, "add_label");
-    lua_setglobal(L, "add_label");
+    lua_createtable(L, 0, 0);
+    {
+        lua_pushcfunction(L, window_new, "window_new");   
+        lua_setfield(L, -2, "new");
+    }
+    lua_setglobal(L, "Window");
 
     std::string bytecode = Luau::compile(R"(
-        local window = window_new('Hello!');
-
-        local label = add_label(window, "this is text");
+        local window = Window.new("Hello!");
     )");
 
     luau_load(L, "", bytecode.c_str(), bytecode.size(), 0);

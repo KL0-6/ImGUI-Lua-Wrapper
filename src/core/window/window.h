@@ -1,3 +1,6 @@
+#ifndef _window_h_
+#define _window_h_
+
 #include <Imgui/imgui.h>
 #include <Imgui/imgui_impl_glfw.h>
 #include <Imgui/imgui_impl_opengl3.h>
@@ -15,6 +18,7 @@ namespace window
 	        ~base() = default;
 
         public:
+            int lua_ref = 0;
             virtual void render() {};
     };
 
@@ -44,7 +48,8 @@ namespace window
     struct window
     {
         std::string title;
-
+        int lua_ref;
+        
         std::vector<base*> children;
 
         void render()
@@ -60,3 +65,5 @@ namespace window
 
     inline std::vector<window*> windows;
 }
+
+#endif
