@@ -15,7 +15,7 @@ void window::window::render()
 {
     ImGui::Begin(title.c_str());
 
-    for (auto child : children)
+    for (base* child : children)
         child->render();
 
     ImGui::End();

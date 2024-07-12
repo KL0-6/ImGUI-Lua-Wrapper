@@ -11,3 +11,4 @@ out/
 build/
 .vs/
 .vscode/
+*.ini

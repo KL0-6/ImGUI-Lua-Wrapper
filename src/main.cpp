@@ -80,7 +80,6 @@ int main()
 
     ImGui_ImplOpenGL3_Init(nullptr);
 
-
     while (!glfwWindowShouldClose(window))
     {
         glfwPollEvents();
@@ -95,14 +94,11 @@ int main()
         ImGui::SetNextWindowSize(ImVec2(w, h)); 
         ImGui::SetNextWindowPos(ImVec2(0, 0));
 
-        for(auto win : window::windows)
-        {
+        for(window::window* win : window::windows)
             win->render();
-        }
 
         ImGui::Render();
         
-
         glViewport(0, 0, w, h);
         glClear(GL_COLOR_BUFFER_BIT);
 
