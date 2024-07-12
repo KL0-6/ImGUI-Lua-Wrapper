@@ -1,5 +1,5 @@
-#ifndef _api_h_
-#define _api_h_
+#ifndef IMGUIWIDGETS_API_H
+#define IMGUIWIDGETS_API_H
 
 #include "metatable.h"
 #include "../window/window.h"
@@ -9,4 +9,4 @@ namespace api
     lua_State* initialize();
 }
 
-#endif
+#endif // IMGUIWIDGETS_API_H

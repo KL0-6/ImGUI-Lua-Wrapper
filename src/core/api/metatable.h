@@ -1,7 +1,8 @@
-#ifndef _metatable_h_
-#define _metatable_h_
+#ifndef IMGUIWIDGETS_METATABLE_H
+#define IMGUIWIDGETS_METATABLE_H
 
 #include <lualib.h>
+
 #include <iostream>
 
 namespace metatable

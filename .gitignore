@@ -1,37 +1,13 @@
-# Prerequisites
-*.d
-
-# Compiled Object files
-*.slo
-*.lo
 *.o
-*.obj
-
-# Precompiled Headers
-*.gch
-*.pch
-
-# Compiled Dynamic libraries
+*.exe
+*.dll
 *.so
 *.dylib
-*.dll
-
-# Fortran module files
-*.mod
-*.smod
-
-# Compiled Static libraries
-*.lai
-*.la
+*.obj
 *.a
 *.lib
 
-# Executables
-*.exe
-*.out
-*.app
-
-# Build Directory
-/build
-*.ini
-.vscode/settings.json
+out/
+build/
+.vs/
+.vscode/
