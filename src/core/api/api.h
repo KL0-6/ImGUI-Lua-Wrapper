@@ -2,7 +2,6 @@
 #define IMGUIWIDGETS_API_H
 
 #include "metatable.h"
-#include "../window/window.h"
 
 namespace api
 {

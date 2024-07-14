@@ -18,25 +18,6 @@ int window_new(lua_State* L)
     return 1;
 }
 
-int add_label(lua_State* L)
-{
-    luaL_checktype(L, 1, LUA_TUSERDATA);
-    luaL_checktype(L, 2, LUA_TSTRING);
-
-    window::window* win = reinterpret_cast<window::window*>(lua_touserdata(L, 1));
-    const char* text = lua_tostring(L, 2);
-
-    window::label* label = metatable::create_userdata<window::label>(L);
-	new(label)window::label;
-
-    label->text = text;
-    label->lua_ref = lua_ref(L, -1);
-
-    win->children.push_back(label);
-
-    return 1;
-}
-
 lua_State* api::initialize()
 {
     lua_State* L = luaL_newstate(); // Create a new lua_State for our scripting environment 
@@ -60,10 +41,26 @@ lua_State* api::initialize()
 
     std::string bytecode = Luau::compile(R"(
         local window = Window.new("Hello!");
+        local x = "E"
+        window:Button("H", function()
+            print(x)
+        end);
+        
+        window:Separator("Section 1")
+
+        window:Button("Y", function()
+            x = "Y"
+        end);
     )");
 
-    luau_load(L, "", bytecode.c_str(), bytecode.size(), 0);
-    lua_pcall(L, 0, 0, 0);
+    lua_State* T = lua_newthread(L);
+
+    luau_load(T, "", bytecode.c_str(), bytecode.size(), 0);
+    int status = lua_resume(T, NULL, 0);
+    if(status == LUA_ERRRUN)
+    {
+        std::printf("Running error %s\n", lua_tostring(T, -1));
+    }
 
     return L; // Returns the lua_State for future use!
 }

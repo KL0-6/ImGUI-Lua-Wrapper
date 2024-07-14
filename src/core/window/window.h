@@ -2,9 +2,11 @@
 #define IMGUIWIDGETS_WINDOW_H
 
 #include <imgui.h>
+#include <imgui_internal.h>
 #include <backends/imgui_impl_glfw.h>
 #include <backends/imgui_impl_opengl3.h>
 #include <GLFW/glfw3.h> 
+#include <lualib.h>
 
 #include <string>
 #include <vector>
@@ -18,28 +20,37 @@ namespace window
 	    ~base() = default;
 
     public:
+        lua_State* L;
         int lua_ref = 0;
         virtual void render() = 0;
     };
 
     struct button : public base
     {
-        std::string text;
-        std::function<void()> callback;
+        std::string text; // Required
+        int callback_ref = 0;
 
         void render() override;
     };
 
     struct label : public base
     {
-        std::string text;
+        std::string text; // Required
+
+        void render() override;
+    };
+
+    struct separator : public base
+    {
+        std::string text; 
+        float extra_width = 0.0f; 
 
         void render() override;
     };
 
     struct window
     {
-        std::string title;
+        std::string title; // Required
         int lua_ref;
         
         std::vector<base*> children;

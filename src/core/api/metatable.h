@@ -1,9 +1,9 @@
 #ifndef IMGUIWIDGETS_METATABLE_H
 #define IMGUIWIDGETS_METATABLE_H
 
-#include <lualib.h>
-
 #include <iostream>
+#include <lualib.h>
+#include "../window/window.h"
 
 namespace metatable
 {
